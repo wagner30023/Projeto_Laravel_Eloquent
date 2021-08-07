@@ -17,6 +17,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/home','HomeController');
+
 Route::prefix('/config')->group(function(){
 
     Route::get('/','ConfigController@index');

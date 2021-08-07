@@ -12,8 +12,8 @@
 
         <table class="table table-striped table-bordered table-hover table-responsive" >
             <thead>
-                <th >ID</th>
-                <th> Titulo </th>
+                <th> <center> ID </center></th>
+                <th> <center> Titulo </center> </th>
                 <th><center> Ações </center></th>
             </thead>
             
@@ -21,14 +21,25 @@
                 @if(count($list) > 0)     
                     @foreach($list as $item)
                         <tr>
-                            <td> <a href="{{ route('tarefas.done',['id' => $item->id])}}">[@if($item->resolvido===1) desmarcar @else marcar @endif] </a> </td>
-                            <td> {{ $item->titulo }}  </td>
-                            <td> 
-                                <center>
-                                    <a class="btn btn-small btn-success" href="{{ route('tarefas.edit',['id' => $item->id])}}" > [ Editar ]</a>
-                                    <a class="btn btn-small btn-danger" href="{{ route('tarefas.del',['id' => $item->id])}}" onclick="return confirm(' Tem certeza que deseja excluir? ')" > [ Excluir ]</a>  
-                                </center>
-                            </td>
+                            
+                                <td> 
+                                    <center>
+                                        <a href="{{ route('tarefas.done',['id' => $item->id])}}">[@if($item->resolvido===1) desmarcar @else marcar @endif] </a>
+                                    </center>
+                                </td>
+                            
+                                <td> 
+                                    <center>
+                                        {{ $item->titulo }}        
+                                    </center>  
+                                </td>
+                                
+                                <td> 
+                                    <center>
+                                        <a class="btn btn-small btn-success" href="{{ route('tarefas.edit',['id' => $item->id])}}" > [ Editar ]</a>
+                                        <a class="btn btn-small btn-danger" href="{{ route('tarefas.del',['id' => $item->id])}}" onclick="return confirm(' Tem certeza que deseja excluir? ')" > [ Excluir ]</a>  
+                                    </center>
+                                </td>
                         </tr>           
                     @endforeach        
                 @else

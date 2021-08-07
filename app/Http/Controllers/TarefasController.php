@@ -4,12 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
+use App\Models\Tarefa;
 class TarefasController extends Controller
 {
     public function list(){
-        $list = DB::select('SELECT * FROM tarefas');
-
+        $list = Tarefa::all();
+        
         return view('tarefas.list',[
             'list' => $list
         ]);
@@ -27,21 +27,18 @@ class TarefasController extends Controller
         ]);
 
         $titulo = $request->input('titulo');
-        DB::insert('INSERT INTO tarefas (titulo) VALUES (:titulo)',[
-            'titulo' => $titulo 
-        ]);
+        $tarefa = new Tarefa();
+        $tarefa->titulo = $titulo;
+        $tarefa->save();
 
         return redirect()->route('tarefas.list');
     } 
 
     public function edit($id){
-        $data = DB::select('SELECT * FROM tarefas WHERE id = :id',[
-            'id' => $id
-        ]);
-
-        if(count($data) > 0){
+        $data = Tarefa::find($id);
+        if($data){
             return view('tarefas.edit',[
-                'data' => $data[0]
+                'data' => $data
             ]);
         } else {
             return redirect()->route('tarefas.list');
@@ -54,16 +51,13 @@ class TarefasController extends Controller
         ]);
 
         $titulo = $request->input('titulo');
-        $data = DB::select('SELECT * FROM tarefas WHERE id = :id',[
-            'id' => $id
-        ]);
-    
-        if(count($data) > 0){
-            DB::update('UPDATE tarefas SET titulo = :titulo WHERE id = :id',[
-                'id' => $id,
-                'titulo' => $titulo
-            ]);
-        } 
+        
+        // $tarefa = Tarefa::find($id);
+        // $tarefa->titulo = $titulo;
+        // $tarefa->save();
+
+        // outra formato para usar em uma única linha
+        Tarefa::find($id)->update(['titulo' => $titulo]);
 
         return redirect()->route('tarefas.list');
         
@@ -71,9 +65,8 @@ class TarefasController extends Controller
     
 
     public function del($id){
-        DB::delete('delete from tarefas where id = :id',[
-            'id' => $id
-        ]); 
+        Tarefa::find($id)->delete();
+
         return redirect()->route('tarefas.list');
     }
 
@@ -81,10 +74,14 @@ class TarefasController extends Controller
     public function done($id){
         // opcao 1: select + update 
         // opcao 2: update matematico  
-        DB::update('UPDATE tarefas  SET resolvido = 1 - resolvido WHERE id = :id',[
-            'id' => $id
-        ]);
 
+        $tarefa = Tarefa::find($id);
+            
+        if($tarefa){
+            $tarefa->resolvido = 1 - $tarefa->resolvido;
+            $tarefa->save();
+        }
+        
         return redirect()->route('tarefas.list');
     }
 }
